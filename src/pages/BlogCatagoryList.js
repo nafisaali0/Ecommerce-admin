@@ -29,14 +29,14 @@ for (let i = 0; i < 46; i++) {
 }
 
 const BlogCatagoryList = () => {
-    return (
-        <div className="mt-4">
-          <h3 className="mb-5 title">Blog Catagory List</h3>
-          <div>
-            <Table columns={columns} dataSource={data1} />
-          </div>
-        </div>
-      );
-}
+  return (
+    <div className="mt-4">
+      <h3 className="mb-5 title">Blog Catagory List</h3>
+      <div>
+        <Table columns={columns} dataSource={data1} />
+      </div>
+    </div>
+  );
+};
 
-export default BlogCatagoryList
+export default BlogCatagoryList;

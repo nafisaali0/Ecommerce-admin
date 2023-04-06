@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import MainLayout from './components/MainLayout';
 import Enquaries from './pages/Enquaries';
 import BlogList from './pages/BlogList';
+import AddBlog from './pages/AddBlog';
 import BlogCatagoryList from './pages/BlogCatagoryList';
 import Order from './pages/Order';
 import Customers from './pages/Customers';
@@ -14,6 +15,11 @@ import ProductList from './pages/ProductList';
 import BrandList from './pages/BrandList';
 import CatagoryList from './pages/CatagoryList';
 import ColorList from './pages/ColorList';
+import AddBlogCatagory from './pages/AddBlogCatagory';
+import AddColor from './pages/AddColor';
+import AddCatagory from './pages/AddCatagory';
+import AddBrand from './pages/AddBrand';
+import AddProduct from './pages/AddProduct';
 
 
 function App() {
@@ -29,11 +35,17 @@ function App() {
           <Route path="customers" element={< Customers/>} />
           <Route path="orders" element={< Order/>} />
           <Route path="enquiries" element={< Enquaries/>} />
+          <Route path="product" element={< AddProduct/>} />
           <Route path="product-list" element={< ProductList/>} />
+          <Route path="brand" element={< AddBrand/>} />
           <Route path="brand-list" element={< BrandList/>} />
+          <Route path="category" element={< AddCatagory/>} />
           <Route path="category-list" element={< CatagoryList/>} />
+          <Route path="color" element={< AddColor/>} />
           <Route path="color-list" element={< ColorList/>} />
+          <Route path="blog" element={< AddBlog/>} />
           <Route path="blog-list" element={< BlogList/>} />
+          <Route path="blog-category" element={< AddBlogCatagory/>} />
           <Route path="blog-category-list" element={< BlogCatagoryList/>} />
         </Route>
       </Routes>
