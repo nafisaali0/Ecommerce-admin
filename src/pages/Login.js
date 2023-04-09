@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 
+
 let schema = yup.object().shape({
   email: yup
     .string()
@@ -31,14 +32,14 @@ const Login = () => {
   const { user, isError, isSuccess, isLoading, message } = authState.auth;
 
   useEffect(() => {
-    if (isSuccess) {
+    if (user || isSuccess) {
       navigate("admin");
     } else {
       navigate("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, isError, isSuccess, isLoading]);
-  
+
   return (
     <div className="py-5" style={{ background: "#ffd333", minHeight: "100vh" }}>
       <br />
@@ -61,7 +62,6 @@ const Login = () => {
             onChange={formik.handleChange("email")}
             onBlur={formik.handleBlur("email")}
             value={formik.values.email}
-          
           />
           <div className="error mt-2">
             {formik.touched.email && formik.errors.email}

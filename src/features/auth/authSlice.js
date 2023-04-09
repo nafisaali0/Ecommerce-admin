@@ -4,6 +4,7 @@ import authService from "./authService";
 const getUserfromLocalStorage = localStorage.getItem("user")
   ? JSON.parse(localStorage.getItem("user"))
   : null;
+  
 const initialState = {
   user: getUserfromLocalStorage,
   orders: [],
