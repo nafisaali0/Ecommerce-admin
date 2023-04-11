@@ -1,73 +1,265 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import CustomInput from "../components/CustomInput";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { InboxOutlined } from "@ant-design/icons";
-import { message, Upload } from "antd";
-const { Dragger } = Upload;
-const props = {
-  name: "file",
-  multiple: true,
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { getBrands } from "../features/brands/brandSlice";
+import { getProductCatagories } from "../features/productcatagory/productcatagorySlice";
+import { getColors } from "../features/colors/colorSlice";
+import { createProducts, resetState } from "../features/products/productsSlice";
+import { Select } from "antd";
+import Dropzone from "react-dropzone";
+import { delImg, uploadImg } from "../features/upload/uploadSlice";
+
+let schema = yup.object().shape({
+  title: yup.string().required("Title is Required"),
+  description: yup.string().required("Description is Required"),
+  price: yup.number().required("Price is Required"),
+  brands: yup.string().required("Brand is Required"),
+  catagory: yup.string().required("Category is Required"),
+  tags: yup.string().required("Tag is Required"),
+  color: yup
+    .array()
+    .min(1, "Pick at least one color")
+    .required("Color is Required"),
+  quantity: yup.number().required("Quantity is Required"),
+});
 
 const AddProduct = () => {
-  const [desc, setDesc] = useState();
-  const handleDesc = (e) => {
-    setDesc(e);
+  const dispatch = useDispatch();
+  const [color, setColor] = useState([]);
+
+  useEffect(() => {
+    dispatch(getBrands());
+    dispatch(getProductCatagories());
+    dispatch(getColors());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const brandState = useSelector((state) => state.brand.brands);
+  const productCatagoryState = useSelector(
+    (state) => state.productcatagory.productCatagories
+  );
+  const colorState = useSelector((state) => state.color.colors);
+  const imgState = useSelector((state) => state.upload.images);
+  const newProduct = useSelector((state) => state.product);
+  const { isSuccess, isError, isLoading, createdProduct } = newProduct;
+  useEffect(() => {
+    if (isSuccess && createdProduct) {
+      toast.success("Product Added Successfullly!");
+    }
+    if (isError) {
+      toast.error("Something Went Wrong!");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isError, isLoading]);
+
+  const coloropt = [];
+  colorState.forEach((i) => {
+    coloropt.push({
+      label: i.title,
+      value: i._id,
+    });
+  });
+
+  const img = [];
+  imgState.forEach((i) => {
+    img.push({
+      public_id: i.public_id,
+      url: i.url,
+    });
+  });
+
+  useEffect(() => {
+    formik.values.color = color ? color : " ";
+    formik.values.images = img;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [color, img]);
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      price: "",
+      brands: "",
+      catagory: "",
+      tags: "",
+      color: "",
+      quantity: "",
+      images: "",
+    },
+    validationSchema: schema,
+    onSubmit: (values) => {
+      dispatch(createProducts(values));
+      formik.resetForm();
+      setColor(null);
+      setTimeout(() => {
+        dispatch(resetState());
+      }, 3000);
+    },
+  });
+
+  const handleColors = (e) => {
+    setColor(e);
   };
+
   return (
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form>
-          <CustomInput type="text" label="Enter Product Title" />
+        <form
+          action=""
+          onSubmit={formik.handleSubmit}
+          className="d-flex gap-3 flex-column"
+        >
+          <CustomInput
+            type="text"
+            label="Enter Product Title"
+            name="title"
+            onChange={formik.handleChange("title")}
+            onBlur={formik.handleBlur("title")}
+            value={formik.values.title}
+          />
+          <div className="error">
+            {formik.touched.title && formik.errors.title}
+          </div>
+
           <div className="mb-3">
             <ReactQuill
               theme="snow"
-              value={desc}
-              onChange={(evt) => {
-                handleDesc(evt);
-              }}
+              name="description"
+              onChange={formik.handleChange("description")}
+              value={formik.values.description}
             />
           </div>
-          <CustomInput type="number" label="Enter Product Price" />
-          <select name="" className="form-control py-3 mb-3" id="">
+          <div className="error">
+            {formik.touched.description && formik.errors.description}
+          </div>
+
+          <CustomInput
+            type="number"
+            label="Enter Product Price"
+            name="price"
+            onChange={formik.handleChange("price")}
+            onBlur={formik.handleBlur("price")}
+            value={formik.values.price}
+          />
+          <div className="error">
+            {formik.touched.price && formik.errors.price}
+          </div>
+
+          <select
+            name="brands"
+            onChange={formik.handleChange("brands")}
+            onBlur={formik.handleBlur("brands")}
+            value={formik.values.brands}
+            className="form-control py-3 mb-3"
+            id=""
+          >
             <option value="">Select Brand</option>
+            {brandState &&
+              brandState.map((i, j) => {
+                return (
+                  <option key={j} value={i.title}>
+                    {i.title}
+                  </option>
+                );
+              })}
           </select>
-          <select name="" className="form-control py-3 mb-3" id="">
+          <div className="error">
+            {formik.touched.brands && formik.errors.brands}
+          </div>
+
+          <select
+            name="catagory"
+            onChange={formik.handleChange("catagory")}
+            onBlur={formik.handleBlur("catagory")}
+            value={formik.values.catagory}
+            className="form-control py-3 mb-3"
+            id=""
+          >
             <option value="">Select Category</option>
+            {productCatagoryState &&
+              productCatagoryState.map((i, j) => {
+                return (
+                  <option key={j} value={i.title}>
+                    {i.title}
+                  </option>
+                );
+              })}
           </select>
-          <select name="" className="form-control py-3 mb-3" id="">
-            <option value="">Select Color</option>
+          <div className="error">
+            {formik.touched.catagory && formik.errors.catagory}
+          </div>
+
+          <select
+            name="tags"
+            onChange={formik.handleChange("tags")}
+            onBlur={formik.handleBlur("tags")}
+            value={formik.values.tags}
+            className="form-control py-3 mb-3"
+            id=""
+          >
+            <option value="" disabled>
+              Select Tags
+            </option>
+            <option value="featured">Featured</option>
+            <option value="popular">Popular</option>
+            <option value="special">Special</option>
           </select>
-          <CustomInput type="number" label="Enter Product Price" />
-          <Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single or bulk upload. Strictly prohibit from
-              uploading company data or other band files
-            </p>
-          </Dragger>
+          <div className="error">
+            {formik.touched.tags && formik.errors.tags}
+          </div>
+          
+          <Select
+            mode="multiple"
+            allowClear
+            className="w-100"
+            placeholder="Select colors"
+            defaultValue={color}
+            onChange={(i) => handleColors(i)}
+            options={coloropt}
+          />
+          <div className="error">
+            {formik.touched.color && formik.errors.color}
+          </div>
+
+          <div className="bg-white border-1 p-5 text-center">
+            <Dropzone
+              onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <section>
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p>
+                      Drag 'n' drop some files here, or click to select files
+                    </p>
+                  </div>
+                </section>
+              )}
+            </Dropzone>
+          </div>
+          <div className="showimages d-flex flex-wrap gap-3">
+            {imgState &&
+              imgState?.map((i, j) => {
+                return (
+                  <div className=" position-relative" key={j}>
+                    <button
+                      type="button"
+                      onClick={() => dispatch(delImg(i.public_id))}
+                      className="btn-close position-absolute"
+                      style={{ top: "10px", right: "10px" }}
+                    ></button>
+                    <img src={i.url} alt="" width={200} height={200} />
+                  </div>
+                );
+              })}
+          </div>
+
           <button
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"

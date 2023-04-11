@@ -5,6 +5,10 @@ import productReducer from "../features/products/productsSlice";
 import brandReducer from "../features/brands/brandSlice";
 import colorReducer from "../features/colors/colorSlice";
 import productcatagoryReducer from "../features/productcatagory/productcatagorySlice";
+import blogReducer from "../features/blogs/blogSlice";
+import blogcatagoryReducer from "../features/blogcatagory/blogcatagorySlice";
+import enquaryReducer from "../features/enquary/enquarySlice";
+import uploadReducer from "../features/upload/uploadSlice";
 export const store = configureStore({
   reducer: {
     auth: authReduducer,
@@ -13,5 +17,9 @@ export const store = configureStore({
     brand: brandReducer,
     color: colorReducer,
     productcatagory: productcatagoryReducer,
+    blog: blogReducer,
+    blogcatagory: blogcatagoryReducer,
+    enquary: enquaryReducer,
+    upload: uploadReducer,
   },
 });

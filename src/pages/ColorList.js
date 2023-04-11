@@ -29,7 +29,7 @@ const ColorList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const colorState = useSelector((state) => state.color.colors);
-  console.log(colorState);
+  
   const data1 = [];
   for (let i = 0; i < colorState.length; i++) {
     data1.push({

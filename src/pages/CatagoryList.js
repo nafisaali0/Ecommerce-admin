@@ -39,7 +39,7 @@ const CatagoryList = () => {
       action: (
         <>
           <Link
-            to={`/admin/brand/${productCatagoryState[i]._id}`}
+            to={`/admin/category/${productCatagoryState[i]._id}`}
             className=" fs-3 text-danger"
           >
             <BiEdit />
