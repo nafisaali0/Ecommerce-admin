@@ -61,7 +61,7 @@ const AddProduct = () => {
   colorState.forEach((i) => {
     coloropt.push({
       label: i.title,
-      value: i._id,
+      value: i.title,
     });
   });
 
@@ -225,6 +225,18 @@ const AddProduct = () => {
           />
           <div className="error">
             {formik.touched.color && formik.errors.color}
+          </div>
+
+          <CustomInput
+            type="number"
+            label="Enter Product Quantity"
+            name="quantity"
+            onChange={formik.handleChange("quantity")}
+            onBlur={formik.handleBlur("quantity")}
+            value={formik.values.quantity}
+          />
+          <div className="error">
+            {formik.touched.quantity && formik.errors.quantity}
           </div>
 
           <div className="bg-white border-1 p-5 text-center">
