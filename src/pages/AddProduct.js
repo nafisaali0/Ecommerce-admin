@@ -247,9 +247,9 @@ const AddProduct = () => {
                 <section>
                   <div {...getRootProps()}>
                     <input {...getInputProps()} />
-                    <p>
+                    <h5 className="fw-9 fs-6">
                       Drag 'n' drop some files here, or click to select files
-                    </p>
+                    </h5>
                   </div>
                 </section>
               )}

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import productcatagoryService from "./productcatagoryService";
 
 export const getProductCatagories = createAsyncThunk(
@@ -11,6 +11,20 @@ export const getProductCatagories = createAsyncThunk(
     }
   }
 );
+
+export const createProductCategory = createAsyncThunk(
+  "product-catagory/create-product-catagories",
+  async (categoryData, thunkAPI) => {
+    try {
+      return await productcatagoryService.createProductCategory(categoryData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const resetState = createAction("RevertAll");
+
 const initialState = {
   productCatagories: [],
   isError: false,
@@ -38,7 +52,23 @@ export const productCatagorySlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-      });
+      })
+      .addCase(createProductCategory.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createProductCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.createdProductCategory = action.payload;
+      })
+      .addCase(createProductCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 export default productCatagorySlice.reducer;
