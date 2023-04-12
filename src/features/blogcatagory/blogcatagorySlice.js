@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, createAction } from "@reduxjs/toolkit";
 import blogcatagoryService from "./blogcatagoryService";
 
 export const getBlogCatagories = createAsyncThunk(
@@ -11,15 +11,29 @@ export const getBlogCatagories = createAsyncThunk(
     }
   }
 );
+
+export const createNewblogCat = createAsyncThunk(
+  "blog-catagory/create-blog-catagory",
+  async (catData, thunkAPI) => {
+    try {
+      return await blogcatagoryService.createBlogCategory(catData);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const resetState = createAction("Reset_all");
+
 const initialState = {
-  blogCatagies: [],
+  blogCatagories: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
 };
 export const blogcatagorySlice = createSlice({
-  name: "blogCatagies",
+  name: "blogCatagories",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -31,14 +45,30 @@ export const blogcatagorySlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.blogCatagies = action.payload;
+        state.blogCatagories = action.payload;
       })
       .addCase(getBlogCatagories.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-      });
+      })
+      .addCase(createNewblogCat.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createNewblogCat.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.createBlogCatagory = action.payload;
+      })
+      .addCase(createNewblogCat.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 export default blogcatagorySlice.reducer;
