@@ -36,8 +36,7 @@ const AddProduct = () => {
     dispatch(getBrands());
     dispatch(getProductCatagories());
     dispatch(getColors());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const brandState = useSelector((state) => state.brand.brands);
   const productCatagoryState = useSelector(
@@ -47,6 +46,7 @@ const AddProduct = () => {
   const imgState = useSelector((state) => state.upload.images);
   const newProduct = useSelector((state) => state.product);
   const { isSuccess, isError, isLoading, createdProduct } = newProduct;
+  
   useEffect(() => {
     if (isSuccess && createdProduct) {
       toast.success("Product Added Successfullly!");
@@ -54,8 +54,8 @@ const AddProduct = () => {
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, isError, isLoading]);
+
+  }, [isSuccess, isError, isLoading, createdProduct]);
 
   const coloropt = [];
   colorState.forEach((i) => {
@@ -213,7 +213,7 @@ const AddProduct = () => {
           <div className="error">
             {formik.touched.tags && formik.errors.tags}
           </div>
-          
+
           <Select
             mode="multiple"
             allowClear

@@ -1,10 +1,15 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getBrands } from "../features/brands/brandSlice";
+import {
+  deleteSingleBrand,
+  getBrands,
+  resetState,
+} from "../features/brands/brandSlice";
+import CustomModal from "../components/CustomModal";
 
 const columns = [
   {
@@ -22,15 +27,30 @@ const columns = [
   },
 ];
 
-
 const BrandList = () => {
+  const [open, setOpen] = useState(false);
+  const [brandId, setbrandId] = useState("");
+
+  const showModal = (e) => {
+    setOpen(true);
+    setbrandId(e);
+    console.log("id:", e)
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+
   const dispatch = useDispatch();
+
   useEffect(() => {
+    dispatch(resetState());
     dispatch(getBrands());
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const brandState = useSelector((state) => state.brand.brands);
- 
+
   const data1 = [];
   for (let i = 0; i < brandState.length; i++) {
     data1.push({
@@ -46,6 +66,7 @@ const BrandList = () => {
           </Link>
           <button
             className="ms-3 fs-3 text-danger bg-transparent border-0"
+            onClick={() => showModal(brandState[i]._id)}
           >
             <AiFillDelete />
           </button>
@@ -53,14 +74,32 @@ const BrandList = () => {
       ),
     });
   }
+
+  const deleteBrand = (e) => {
+    dispatch(deleteSingleBrand(e));
+
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(getBrands());
+    }, 100);
+  };
   return (
     <div className="mt-4">
       <h3 className="mb-5 title">Brand List</h3>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
+
+      <CustomModal
+        hideModal={hideModal}
+        open={open}
+        performAction={() => {
+          deleteBrand(brandId);
+        }}
+        title="Are you sure you want to delete this brand?"
+      />
     </div>
   );
-}
+};
 
-export default BrandList
+export default BrandList;

@@ -53,34 +53,30 @@ const ProductList = () => {
 
   useEffect(() => {
     dispatch(getProducts());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const productState = useSelector((state) => state.product.products);
+
+  const data1 = productState.map((product, i) => ({
+    key: i + 1,
+    title: productState[i].title,
+    brands: productState[i].brands,
+    catagory: productState[i].catagory,
+    color: productState[i].color,
+    quantity: productState[i].quantity,
+    price: `${productState[i].price}`,
+    action: (
+      <>
+        <Link to="/" className=" fs-3 text-danger">
+          <BiEdit />
+        </Link>
+        <Link className="ms-3 fs-3 text-danger" to="/">
+          <AiFillDelete />
+        </Link>
+      </>
+    ),
+  }));
   
-  const data1 = [];
-  for (let i = 0; i < productState.length; i++) {
-    data1.push({
-      key: i + 1,
-      title: productState[i].title,
-      brands: productState[i].brands,
-      catagory: productState[i].catagory,
-      color: productState[i].color,
-      quantity: productState[i].quantity,
-      price: `${productState[i].price}`,
-      action: (
-        <>
-          <Link to="/" className=" fs-3 text-danger">
-            <BiEdit />
-          </Link>
-          <Link className="ms-3 fs-3 text-danger" to="/">
-            <AiFillDelete />
-          </Link>
-        </>
-      ),
-    });
-  }
-  console.log(data1);
   return (
     <div className="mt-4">
       <h3 className="mb-5 title">Product List</h3>

@@ -6,6 +6,7 @@ import brandReducer from "../features/brands/brandSlice";
 import colorReducer from "../features/colors/colorSlice";
 import productcatagoryReducer from "../features/productcatagory/productcatagorySlice";
 import blogReducer from "../features/blogs/blogSlice";
+import couponReducer from "../features/coupon/couponSlice";
 import blogcatagoryReducer from "../features/blogcatagory/blogcatagorySlice";
 import enquaryReducer from "../features/enquary/enquarySlice";
 import uploadReducer from "../features/upload/uploadSlice";
@@ -19,6 +20,7 @@ export const store = configureStore({
     productcatagory: productcatagoryReducer,
     blog: blogReducer,
     blogcatagory: blogcatagoryReducer,
+    coupon: couponReducer,
     enquary: enquaryReducer,
     upload: uploadReducer,
   },
