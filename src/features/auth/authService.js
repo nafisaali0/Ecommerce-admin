@@ -22,7 +22,6 @@ const getOrder = async (id) => {
     "",
     config
   );
-
   return response.data;
 }
 

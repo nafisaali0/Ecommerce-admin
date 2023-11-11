@@ -38,12 +38,15 @@ export const getOrderByUser = createAsyncThunk(
   "order/get-order",
   async (id, thunkAPI) => {
     try {
-      return await authService.getOrder(id);
+      const response = await authService.getOrder(id);
+      return response;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      const { message, response } = error;
+      return thunkAPI.rejectWithValue({ message, response });
     }
   }
 );
+
 
 export const authSlice = createSlice({
   name: "auth",

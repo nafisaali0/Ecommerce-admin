@@ -16,7 +16,8 @@ const AddCatagory = () => {
   const location = useLocation();
   const getPCatId = location.pathname.split("/")[3];
   const navigate = useNavigate();
-  const newCategory = useSelector((state) => state.productcatagory);
+  const newCategory = useSelector((state) => state.productcatagory.productCatagories);
+  console.log(newCategory)
   const {
     isSuccess,
     isError,

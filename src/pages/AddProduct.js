@@ -5,11 +5,17 @@ import "react-quill/dist/quill.snow.css";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getBrands } from "../features/brands/brandSlice";
 import { getProductCatagories } from "../features/productcatagory/productcatagorySlice";
 import { getColors } from "../features/colors/colorSlice";
-import { createProducts, resetState } from "../features/products/productsSlice";
+import {
+  createProducts,
+  getSingleProduct,
+  updateSingleProduct,
+  resetState,
+} from "../features/products/productsSlice";
 import { Select } from "antd";
 import Dropzone from "react-dropzone";
 import { delImg, uploadImg } from "../features/upload/uploadSlice";
@@ -30,13 +36,10 @@ let schema = yup.object().shape({
 
 const AddProduct = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const getProductId = location.pathname.split("/")[3];
   const [color, setColor] = useState([]);
-
-  useEffect(() => {
-    dispatch(getBrands());
-    dispatch(getProductCatagories());
-    dispatch(getColors());
-  }, [dispatch]);
 
   const brandState = useSelector((state) => state.brand.brands);
   const productCatagoryState = useSelector(
@@ -44,18 +47,43 @@ const AddProduct = () => {
   );
   const colorState = useSelector((state) => state.color.colors);
   const imgState = useSelector((state) => state.upload.images);
-  const newProduct = useSelector((state) => state.product);
-  const { isSuccess, isError, isLoading, createdProduct } = newProduct;
-  
+  const newProduct = useSelector((state) => state.product.products);
+  console.log(newProduct)
+  const {
+    isSuccess,
+    isError,
+    isLoading,
+    createdProduct,
+    updatedProduct,
+    productName,
+  } = newProduct;
+
+  useEffect(() => {
+    dispatch(getBrands());
+    dispatch(getProductCatagories());
+    dispatch(getColors());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (getProductId !== undefined) {
+      dispatch(getSingleProduct(getProductId));
+    } else {
+      dispatch(resetState());
+    }
+  }, [dispatch, getProductId]);
+
   useEffect(() => {
     if (isSuccess && createdProduct) {
       toast.success("Product Added Successfullly!");
     }
+    if (isSuccess && updatedProduct) {
+      toast.success("Product Updated Successfullly!");
+      navigate("/admin/product-list");
+    }
     if (isError) {
       toast.error("Something Went Wrong!");
     }
-
-  }, [isSuccess, isError, isLoading, createdProduct]);
+  }, [isSuccess, isError, isLoading, createdProduct, updatedProduct, navigate]);
 
   const coloropt = [];
   colorState.forEach((i) => {
@@ -81,7 +109,7 @@ const AddProduct = () => {
 
   const formik = useFormik({
     initialValues: {
-      title: "",
+      title: productName | "",
       description: "",
       price: "",
       brands: "",
@@ -93,12 +121,17 @@ const AddProduct = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      dispatch(createProducts(values));
-      formik.resetForm();
-      setColor(null);
-      setTimeout(() => {
+      if (getProductId !== undefined) {
+        const data = { id: getProductId, productData: values };
+        dispatch(updateSingleProduct(data));
         dispatch(resetState());
-      }, 3000);
+      } else {
+        dispatch(createProducts(values));
+        formik.resetForm();
+        setTimeout(() => {
+          dispatch(resetState());
+        }, 300);
+      }
     },
   });
 
@@ -108,7 +141,9 @@ const AddProduct = () => {
 
   return (
     <div>
-      <h3 className="mb-4 title">Add Product</h3>
+      <h3 className="mb-4 title">
+        {getProductId !== undefined ? "Edit" : "Add"} Product
+      </h3>
       <div>
         <form
           action=""
@@ -276,7 +311,7 @@ const AddProduct = () => {
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            Add Product
+            {getProductId !== undefined ? "Edit" : "Add"} Product
           </button>
         </form>
       </div>

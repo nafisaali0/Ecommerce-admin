@@ -1,9 +1,15 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete, AiOutlineEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { getEnquaries } from "../features/enquary/enquarySlice";
+import {
+  getEnquaries,
+  deleteAEnquiry,
+  resetState,
+  updateAEnquiry,
+} from "../features/enquary/enquarySlice";
+import CustomModal from "../components/CustomModal";
 
 const columns = [
   {
@@ -35,15 +41,25 @@ const columns = [
 
 const Enquaries = () => {
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [enqId, setenqId] = useState("");
+  const showModal = (e) => {
+    setOpen(true);
+    setenqId(e);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
   useEffect(() => {
-    dispatch(getEnquaries())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(resetState());
+    dispatch(getEnquaries());
+  }, [dispatch]);
   const enquaryState = useSelector((state) => state.enquary.enquaries);
-  console.log(enquaryState)
+  console.log(enquaryState);
 
   const data1 = [];
-for (let i = 0; i < enquaryState.length; i++) {
+  for (let i = 0; i < enquaryState.length; i++) {
     data1.push({
       key: i + 1,
       name: enquaryState[i].name,
@@ -53,9 +69,12 @@ for (let i = 0; i < enquaryState.length; i++) {
         <>
           <select
             name=""
-            defaultValue={enquaryState[i].status ? enquaryState[i].status : "Submitted"}
+            defaultValue={
+              enquaryState[i].status ? enquaryState[i].status : "Submitted"
+            }
             className="form-control form-select"
             id=""
+            onChange={(e) => setEnquiryStatus(e.target.value, enquaryState[i]._id)}
           >
             <option value="Submitted">Submitted</option>
             <option value="Contacted">Contacted</option>
@@ -69,25 +88,42 @@ for (let i = 0; i < enquaryState.length; i++) {
         <>
           <Link
             className="ms-3 fs-3 text-danger"
-            to={`/admin/enquiries/${enquaryState[i]._id}`}
+            to={`/admin/enquiries/${enquaryState[i].id}`}
           >
             <AiOutlineEye />
           </Link>
-          <button
-            className="ms-3 fs-3 text-danger bg-transparent border-0"
-          >
+          <button className="ms-3 fs-3 text-danger bg-transparent border-0" onClick={() => showModal(enquaryState[i]._id)}>
             <AiFillDelete />
           </button>
         </>
       ),
     });
   }
+  const setEnquiryStatus = (e, i) => {
+    console.log(e, i);
+    const data = { id: i, enqData: e };
+    dispatch(updateAEnquiry(data));
+  };
+  const deleteEnq = (e) => {
+    dispatch(deleteAEnquiry(e));
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(getEnquaries());
+    }, 100);
+  };
   return (
     <div className="mt-4">
       <h3 className="mb-5 title">Enquaries</h3>
       <div>
         <Table columns={columns} dataSource={data1} />
-      </div>
+      </div><CustomModal
+        hideModal={hideModal}
+        open={open}
+        performAction={() => {
+          deleteEnq(enqId);
+        }}
+        title="Are you sure you want to delete this enquiry?"
+      />
     </div>
   );
 };

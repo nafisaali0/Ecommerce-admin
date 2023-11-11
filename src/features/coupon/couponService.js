@@ -9,6 +9,8 @@ const getCoupons = async () => {
 };
 
 const createCoupon = async (coupon) => {
+
+ 
   const response = await axios.post(`${base_url}coupon/`, coupon, config);
 
   return response.data;
@@ -19,7 +21,7 @@ const updateCoupon = async (coupon) => {
     `${base_url}coupon/${coupon.id}`,
     {
       name: coupon.couponData.name,
-      expiry: coupon.couponData.expiry,
+      expiery: coupon.couponData.expiery,
       discount: coupon.couponData.discount,
     },
     config
