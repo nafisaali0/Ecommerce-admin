@@ -13,7 +13,7 @@ const ViewEnq = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const getEnqId = location.pathname.split("/")[3];
-  const enquaryState = useSelector((state) => state.enquary.enquaries);
+  const enquaryState = useSelector((state) => state.enquary);
   console.log("enq",enquaryState)
   const { enqName, enqMobile, enqEmail, enqComment, enqStatus } = enquaryState;
 

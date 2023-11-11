@@ -88,7 +88,7 @@ const Enquaries = () => {
         <>
           <Link
             className="ms-3 fs-3 text-danger"
-            to={`/admin/enquiries/${enquaryState[i].id}`}
+            to={`/admin/enquiries/${enquaryState[i]._id}`}
           >
             <AiOutlineEye />
           </Link>
