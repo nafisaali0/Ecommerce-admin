@@ -10,8 +10,9 @@ const getProducts = async () => {
 
 const createProduct = async (product) => {
   const response = await axios.post(`${base_url}product/`, product, config);
-
+  console.log("data",product ,response.data)
   return response.data;
+  
 }
 
 const updateProduct = async (product) => {
