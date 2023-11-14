@@ -44,8 +44,8 @@ const MainLayout = () => {
       >
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">NS</span>
-            <span className="lg-logo">NanoSoft</span>
+            <span className="sm-logo">VH</span>
+            <span className="lg-logo">VibeHub</span>
           </h2>
         </div>
         <Menu
@@ -213,8 +213,8 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Shahhinur Islam</h5>
-                <p className="mb-0">shahhinurislam@gmail.com</p>
+                <h5 className="mb-0">Antu Baraua</h5>
+                <p className="mb-0">antubhatta09@gmail.com</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
