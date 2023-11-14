@@ -12,8 +12,8 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Product Id",
+    dataIndex: "pId",
   },
   {
     title: "Product",
@@ -42,19 +42,20 @@ const Order = () => {
     dispatch(getOrders());
   }, [dispatch]);
 
-  const orderState = useSelector((state) => state.auth.orders)
+  const orderState = useSelector((state) => state?.auth?.orders)
+  console.log(orderState, "o")
   const data1 = [];
   for (let i = 0; i < orderState.length; i++) {
     data1.push({
       key: i + 1,
-      name: orderState[i].orderBy.firstname,
+      pId: orderState[i].orderItems[0]?.product?._id,
       
       product: (
-        <Link to={`/admin/orders/${orderState[i].orderBy._id}`}>
+        <Link to={`/admin/orders/${orderState[i]?._id}`}>
           View Orders
         </Link>
       ),
-      amount: orderState[i].paymentIntent.amount,
+      amount: orderState[i].totalPrice,
      
       date: new Date(orderState[i].createdAt).toLocaleString(),
       action: (

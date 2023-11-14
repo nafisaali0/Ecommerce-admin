@@ -32,6 +32,11 @@ const columns = [
     sorter: (a, b) => a.catagory.length - b.catagory.length,
   },
   {
+    title: "Tags",
+    dataIndex: "tags",
+    sorter: (a, b) => a.tags.length - b.tags.length,
+  },
+  {
     title: "Color",
     dataIndex: "color",
   },
@@ -39,6 +44,11 @@ const columns = [
     title: "Quantity",
     dataIndex: "quantity",
     sorter: (a, b) => a.quantity.length - b.quantity.length,
+  },
+  {
+    title: "Reedim",
+    dataIndex: "reedim",
+    sorter: (a, b) => a.reedim.length - b.reedim.length,
   },
   {
     title: "Price",
@@ -78,8 +88,10 @@ const ProductList = () => {
     title: productState[i].title,
     brands: productState[i].brands,
     catagory: productState[i].catagory,
+    tags: productState[i].tags,
     color: productState[i].color,
     quantity: productState[i].quantity,
+    reedim: productState[i].reedim,
     price: `${productState[i].price}`,
     action: (
       <>

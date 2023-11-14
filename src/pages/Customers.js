@@ -30,6 +30,7 @@ const Customers = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const customerstate = useSelector((state) => state.customer.customers );
+  console.log(customerstate)
   
   const data1 = [];
   for (let i = 0; i < customerstate.length; i++) {

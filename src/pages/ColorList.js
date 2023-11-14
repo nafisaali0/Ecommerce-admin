@@ -13,6 +13,11 @@ const columns = [
     dataIndex: "key",
   },
   {
+    title: "ID",
+    dataIndex: "id",
+    sorter: (a, b) => a.id.length - b.id.length,
+  },
+  {
     title: "Name",
     dataIndex: "name",
     sorter: (a, b) => a.name.length - b.name.length,
@@ -58,6 +63,7 @@ const ColorList = () => {
 
   const data1 = colorState.map((color, index) => ({
     key: index + 1,
+    id: color._id,
     name: color.title,
     action: (
       <>

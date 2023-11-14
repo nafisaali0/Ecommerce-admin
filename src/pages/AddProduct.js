@@ -32,6 +32,7 @@ let schema = yup.object().shape({
     .min(1, "Pick at least one color")
     .required("Color is Required"),
   quantity: yup.number().required("Quantity is Required"),
+  reedim: yup.number().required("Reedim is Required"),
 });
 
 const AddProduct = () => {
@@ -47,7 +48,7 @@ const AddProduct = () => {
   );
   const colorState = useSelector((state) => state.color.colors);
   const imgState = useSelector((state) => state.upload.images);
-  const newProduct = useSelector((state) => state.product.products);
+  const newProduct = useSelector((state) => state.product);
   console.log(newProduct)
   const {
     isSuccess,
@@ -117,6 +118,7 @@ const AddProduct = () => {
       tags: "",
       color: "",
       quantity: "",
+      reedim: "",
       images: "",
     },
     validationSchema: schema,
@@ -272,6 +274,17 @@ const AddProduct = () => {
           />
           <div className="error">
             {formik.touched.quantity && formik.errors.quantity}
+          </div>
+          <CustomInput
+            type="number"
+            label="Enter Product Reedim"
+            name="reedim"
+            onChange={formik.handleChange("reedim")}
+            onBlur={formik.handleBlur("reedim")}
+            value={formik.values.reedim}
+          />
+          <div className="error">
+            {formik.touched.reedim && formik.errors.reedim}
           </div>
 
           <div className="bg-white border-1 p-5 text-center">

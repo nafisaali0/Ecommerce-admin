@@ -29,6 +29,10 @@ const columns = [
     dataIndex: "mobile",
   },
   {
+    title: "Comment",
+    dataIndex: "comment",
+  },
+  {
     title: "Staus",
     dataIndex: "status",
   },
@@ -65,6 +69,7 @@ const Enquaries = () => {
       name: enquaryState[i].name,
       email: enquaryState[i].email,
       mobile: enquaryState[i].mobile,
+      comment: enquaryState[i].comment,
       status: (
         <>
           <select
