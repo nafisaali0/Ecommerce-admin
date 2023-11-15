@@ -12,8 +12,12 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Product Id",
+    title: "Order Id",
     dataIndex: "pId",
+  },
+  {
+    title: "Ordered By",
+    dataIndex: "orderby",
   },
   {
     title: "Product",
@@ -28,57 +32,55 @@ const columns = [
     dataIndex: "date",
   },
 
-  {
-    title: "Action",
-    dataIndex: "action",
-  },
+  // {
+  //   title: "Action",
+  //   dataIndex: "action",
+  // },
 ];
 
 const Order = () => {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getOrders());
   }, [dispatch]);
 
-  const orderState = useSelector((state) => state?.auth?.orders)
-  console.log(orderState, "o")
+  const orderState = useSelector((state) => state?.auth?.orders);
+  console.log(orderState, "o");
   const data1 = [];
   for (let i = 0; i < orderState.length; i++) {
     data1.push({
       key: i + 1,
-      pId: orderState[i].orderItems[0]?.product?._id,
-      
+      pId: orderState[i]._id,
+      orderby:
+        orderState[i].user?.firstname + " " + orderState[i].user?.lastname,
       product: (
-        <Link to={`/admin/orders/${orderState[i]?._id}`}>
-          View Orders
-        </Link>
+        <Link to={`/admin/orders/${orderState[i]?._id}`}>View Orders</Link>
       ),
       amount: orderState[i].totalPrice,
-     
+
       date: new Date(orderState[i].createdAt).toLocaleString(),
-      action: (
-        <>
-          <Link to="/" className=" fs-3 text-danger">
-            <BiEdit />
-          </Link>
-          <Link className="ms-3 fs-3 text-danger" to="/">
-            <AiFillDelete />
-          </Link>
-        </>
-      ),
+      // action: (
+      //   <>
+      //     <Link to="/" className=" fs-3 text-danger">
+      //       <BiEdit />
+      //     </Link>
+      //     <Link className="ms-3 fs-3 text-danger" to="/">
+      //       <AiFillDelete />
+      //     </Link>
+      //   </>
+      // ),
     });
   }
 
-    return (
-        <div className="mt-4">
-          <h3 className="mb-5 title">Order</h3>
-          <div>
-            <Table columns={columns} dataSource={data1} />
-          </div>
-        </div>
-      );
-}
+  return (
+    <div className="mt-4">
+      <h3 className="mb-5 title">Order</h3>
+      <div>
+        <Table columns={columns} dataSource={data1} />
+      </div>
+    </div>
+  );
+};
 
-export default Order
+export default Order;
