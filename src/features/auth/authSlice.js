@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice , createAction} from "@reduxjs/toolkit";
 import authService from "./authService";
 
 const getUserfromLocalStorage = localStorage.getItem("user")
@@ -46,7 +46,7 @@ export const getOrder = createAsyncThunk(
     }
   }
 );
-
+export const resetState = createAction("Reset_all");
 
 export const authSlice = createSlice({
   name: "auth",

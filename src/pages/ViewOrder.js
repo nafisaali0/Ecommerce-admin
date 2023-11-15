@@ -28,8 +28,16 @@ const columns = [
     dataIndex: "quantity",
   },
   {
+    title: "Coin Earned",
+    dataIndex: "coinsEarned",
+  },
+  {
     title: "Amount",
     dataIndex: "amount",
+  },
+  {
+    title: "Staus",
+    dataIndex: "status",
   },
   {
     title: "Date",
@@ -64,9 +72,11 @@ const ViewOrder = () => {
       product: orderState[i]?.orderItems[0]?._id,
       price: orderState[i]?.orderItems[0].price,
       quantity: orderState[i]?.orderItems[0].quantity,
+      coinsEarned: orderState[i]?.coinsEarned,
       amount: orderState[i].totalPrice,
+      status: orderState[i].status,
       date: new Date(orderState[i].createdAt).toLocaleString(),
- 
+
     });
   }
 

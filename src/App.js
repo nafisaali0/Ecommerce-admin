@@ -24,6 +24,7 @@ import CouponList from './pages/CouponList';
 import AddCoupon from './pages/AddCoupon';
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
+import Profile from "./pages/profile";
 
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
           <Route path="blog" element={< AddBlog/>} />
           <Route path="blog/:id" element={< AddBlog/>} />
           <Route path="blog-list" element={< BlogList/>} />
+          <Route path="profile" element={<Profile/>} />
           <Route path="coupon" element={< AddCoupon/>} />
           <Route path="coupon/:id" element={< AddCoupon/>} />
           <Route path="coupon-list" element={< CouponList/>} />
